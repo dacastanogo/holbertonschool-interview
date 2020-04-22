@@ -10,18 +10,15 @@ def canUnlockAll(boxes):
     """
     if len(boxes) == 0:
         return True
-    lockers = list(range(1, len(boxes)))
-    keys = set(boxes[0])
-    x = 0
-    while x < len(lockers):
-        if lockers[x] in keys:
-            keys.update(boxes[lockers[x]])
-            keys.remove(lockers[x])
-            lockers.remove(lockers[x])
-            x = 0
-        else:
-            x += 1
-    if lockers == []:
-        return True
-    else:
-        return False
+    visited = {0}
+    stack_of_keys = [0]
+
+    while stack_of_keys:
+        room = stack_of_keys.pop()
+        for key in boxes[room]:
+            if isinstance(
+                    key, int) and 0 <= key < len(boxes) and key not in visited:
+                visited.add(key)
+                stack_of_keys.append(key)
+
+    return len(boxes) == len(visited)
