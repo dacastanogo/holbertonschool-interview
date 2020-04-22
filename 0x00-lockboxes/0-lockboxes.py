@@ -1,13 +1,4 @@
-"""
-Lockboxes, checks if all boxes can be opened
-"""
-
-
 def canUnlockAll(boxes):
-    """
-    Lockboxes, checks if all boxes can be opened
-    Return true or false
-    """
     if len(boxes) == 0:
         return True
     visited = {0}
