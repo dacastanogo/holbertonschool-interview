@@ -18,6 +18,19 @@ typedef struct binary_tree_s
 		struct binary_tree_s *right;
 } binary_tree_t;
 
+typedef struct Queue
+{
+		struct binary_tree_s *node;
+		struct Queue *next;
+} que;
+
 typedef struct binary_tree_s heap_t;
+
+
+void free_que(que **h_queue);
+heap_t *add_node_to_tree(heap_t **root, int value);
+heap_t *heap_insert(heap_t **root, int value);
+void binary_tree_print(const heap_t *);
 binary_tree_t *binary_tree_node(binary_tree_t *parent, int value);
+
 #endif
