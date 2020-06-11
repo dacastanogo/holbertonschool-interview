@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """
-Write a script that reads stdin
-line by line and computes metrics
+Write a script that reads stdin line by line
+and computes metrics
 """
 
 if __name__ == '__main__':
@@ -10,7 +10,7 @@ if __name__ == '__main__':
 
     def printMetrix(fileSize, statusCodes):
         """
-            prints the metrix
+            prints the metrics
         """
 
         print("File size: {}".format(fileSize))
