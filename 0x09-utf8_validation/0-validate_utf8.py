@@ -1,27 +1,51 @@
 #!/usr/bin/python3
-"""
-Write a method determines
-if a given data set represents valid UTF-8 encoding
-"""
+""" UTF-8 Validation """
 
 
 def validUTF8(data):
+    """ determines if a given data set
+        represents a valid UTF-8 encoding
     """
-    method determines valid UTF-8 encoding
-    """
-    index = 0
-    for i, m in enumerate(data):
-        if (index == 0):
-            if (m >> 5) == 0b110:
-                index = 1
-            elif (m >> 4) == 0b1110:
-                index = 2
-            elif (m >> 3) == 0b11110:
-                index = 3
-            elif (m >> 7):
-                return False
-        elif (index > 0):
-            if (m >> 6) != 0b10:
-                return False
-            index -= 1
-    return True
+    d = data
+    labels = [False for n in d]
+    i = 0
+    while i < len(d):
+        if d[i] < 128:
+            labels[i] = True
+            i += 1
+        elif d[i] & 248 == 240:
+            if (i+3 <= len(d)-1):
+                labels[i] = True
+                i += 1
+                for n in range(3):
+                    if d[i+n] & 192 == 128:
+                        labels[i+n] = True
+                    else:
+                        break
+                i += 3
+            else:
+                break
+        elif d[i] & 240 == 224:
+            if (i+2 <= len(d)-1):
+                labels[i] = True
+                i += 1
+                for n in range(2):
+                    if d[i+n] & 192 == 128:
+                        labels[i+n] = True
+                    else:
+                        break
+                i += 2
+            else:
+                break
+        elif d[i] & 224 == 192:
+            if (i+1 <= len(d)-1):
+                labels[i] = True
+                i += 1
+                if d[i] & 192 == 128:
+                    labels[i] = True
+                i += 1
+            else:
+                break
+        else:
+            break
+    return all(labels)
