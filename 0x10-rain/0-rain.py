@@ -1,16 +1,30 @@
 #!/usr/bin/python3
 """
-0_rain.py
+Calculates how much water will be retained
 """
 
 
 def rain(walls):
     """
-    function that estimates how much water can be retained between
-    single/stacked walls represented in a list of walls
+    Calculates water retained given width of walls
     """
+    if walls is None or len(walls) < 2:
+        return 0
+
     water = 0
-    for i in range(len(walls) - 2):
-        if walls[i] and walls[i + 2]:
-            water += min(walls[i], walls[i + 2])
+    n = len(walls)
+    left = [0] * n
+    right = [0] * n
+
+    left[0] = walls[0]
+    for idx in range(1, n):
+        left[idx] = max(left[idx - 1], walls[idx])
+
+    right[n - 1] = walls[n - 1]
+    for idx in range(n - 2, -1, -1):
+        right[idx] = max(right[idx + 1], walls[idx])
+
+    for idx in range(0, n):
+        water += min(left[idx], right[idx]) - walls[idx]
+
     return water
