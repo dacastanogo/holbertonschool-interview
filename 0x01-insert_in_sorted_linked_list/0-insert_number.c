@@ -1,55 +1,56 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include"lists.h"
-
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include "lists.h"
 
 /**
- * insert_node - inserts a number into a sorted singly linked list.
- * @head: pointer to the linked list
- * @number: the value at the new node
- * Return: the address of the new node, or NULL if it failed
+ * insert_node - function that inserts a number into
+ * a sorted singly linked list
+ * @head: double pointer to the head node
+ * @number: integer assigned to a node
+ * Return: address (pointer) to the new node
+ * or NULL if insertion failed
  */
+
 listint_t *insert_node(listint_t **head, int number)
 {
-		listint_t *current;
-		listint_t *new;
+	listint_t *current = NULL;
+	listint_t *new_node = NULL;
 
-		if (!head)
-			return (NULL);
-		new = malloc(sizeof(*new));
-		if (!new)
-			return (NULL);
+	current = *head;
 
-		current = *head;
-		new->n = number;
-		new->next = NULL;
+	new_node = malloc(sizeof(listint_t));
+	if (new_node == NULL)
+		return (NULL);
+	new_node->n = number;
+	new_node->next = NULL;
 
-		if (!*head)
+	if (current == NULL)
+	{
+		*head = new_node;
+		return (new_node);
+	}
+	if (current->n >= number)
+	{
+		new_node->next = current;
+		*head = new_node;
+		return (new_node);
+	}
+	if (current->next == NULL)
+	{
+		current->next = new_node;
+		return (new_node);
+	}
+	while (current->next->n <= number)
+	{
+		current = current->next;
+		if (current->next == NULL)
 		{
-			*head = new;
-			return (new);
+			current->next = new_node;
+			return (new_node);
 		}
-
-		if (current->n > new->n)
-		{
-				new->next = *head;
-				*head = new;
-				return (new);
-		}
-		while (current)
-		{
-				if (current->next == NULL)
-						{
-							current->next = new;
-							return (new);
-						}
-				if (current->next->n > new->n)
-						{
-								new->next = current->next;
-								current->next = new;
-								return (new);
-						}
-						current = current->next;
-		}
-		return (new);
+	}
+	new_node->next = current->next;
+	current->next = new_node;
+	return (new_node);
 }

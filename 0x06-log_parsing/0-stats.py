@@ -1,48 +1,42 @@
 #!/usr/bin/python3
 """
-Write a script that reads stdin line by line
-and computes metrics
+Log parsing
 """
-
 if __name__ == '__main__':
 
     import sys
 
-    def printMetrix(fileSize, statusCodes):
-        """
-            prints the metrics
-        """
+    def metrics(file_size, status_codes):
+        """function that computes metrics"""
+        list_of_tuples = sorted([(k, v) for k, v in
+                                 status_codes.items() if v != 0])
+        print("File size: {}".format(sum(file_size)))
+        for kv in list_of_tuples:
+            print("{}: {}".format(kv[0], kv[1]))
 
-        print("File size: {}".format(fileSize))
-        for status, count in sorted(statusCodes.items()):
-            if count:
-                print("{}: {}".format(status, count))
+    file_size = []
+    status_codes = {'200': 0, '301': 0, '400': 0, '401': 0, '403': 0,
+                    '404': 0, '405': 0, '500': 0}
+    line_count = 0
 
-    counter = 0
-    fileSize = 0
-    statusCodes = {"200": 0,
-                   "301": 0,
-                   "400": 0,
-                   "401": 0,
-                   "403": 0,
-                   "404": 0,
-                   "405": 0,
-                   "500": 0
-                   }
     try:
         for line in sys.stdin:
-            counter += 1
-            data = line.split()
+            line_count += 1
+            parse = line.split()
+            # print(parse)
             try:
-                code = data[-2]
-                if code in statusCodes:
-                    statusCodes[code] += 1
-                fileSize += int(data[-1])
-            except BaseException:
+                file_size += [int(parse[-1])]
+            except:
                 pass
-            if counter % 10 == 0:
-                printMetrix(fileSize, statusCodes)
-        printMetrix(fileSize, statusCodes)
+            try:
+                status_code = parse[-2]
+                if status_code in status_codes.keys():
+                    status_codes[status_code] += 1
+            except:
+                pass
+            if line_count % 10 == 0:
+                metrics(file_size, status_codes)
+        metrics(file_size, status_codes)
     except KeyboardInterrupt:
-        printMetrix(fileSize, statusCodes)
+        metrics(file_size, status_codes)
         raise

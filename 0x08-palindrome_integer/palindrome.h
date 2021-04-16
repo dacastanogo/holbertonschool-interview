@@ -1,6 +1,9 @@
-#ifndef HEADER_FILE
-#define HEADER_FILE
+#ifndef PALINDROME_H
+#define PALINDROME_H
+#include <stdio.h>
 
-unsigned long int reversed(unsigned long n, unsigned long temp);
 int is_palindrome(unsigned long n);
+/* char *itoa(unsigned long n, char *array); */
+int itoa(unsigned long n, char *array);
+
 #endif

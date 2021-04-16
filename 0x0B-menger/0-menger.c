@@ -1,152 +1,51 @@
 #include "menger.h"
-/**
- * rotate - rotate 90 degress
- *
- * @p: pointer to matrix
- * @S: size of the matrix
- * Return: no return
- */
-void rotate(char **p, int S)
-{
-	int i, j, tmp;
 
-	for (i = 0; i < S / 2; i++)
-	{
-		for (j = i; j < S - i - 1; j++)
-		{
-
-			tmp = p[i][j];
-			p[i][j] = p[S - 1 - j][i];
-			p[S - 1 - j][i] = p[S - 1 - i][S - 1 - j];
-			p[S - 1 - i][S - 1 - j] = p[j][S - 1 - i];
-			p[j][S - 1 - i] = tmp;
-		}
-	}
-}
 /**
- * finallyfree - free memory
- * @i: interator
- * @p: pointer
+ * menger - function that draws the 2D Menger
+ * @level: level of the Menger to draw
+ * Return: void
  */
 
-void finallyfree(char **p, int i)
-{
-	int j;
-
-	for (j = 0; j < i; j++)
-	{
-		free(p[j]);
-	}
-	free(p);
-}
-/**
- * alloc_grid - concatenates two strings
- *
- * @width: width array
- * @height: height array
- * Return: pointer to 2D array
- */
-char **alloc_grid(int width, int height)
-{
-	char **p;
-	int i, j;
-
-	if (width > 0 && height > 0)
-	{
-		p = (char **)malloc(sizeof(char *) * height);
-		if (p == NULL)
-			return (NULL);
-		for (i = 0; i <  height; i++)
-		{
-			p[i] = (char *)malloc((width) * sizeof(char));
-			if (p[i] == NULL)
-			{
-				finallyfree(p, i);
-				return (0);
-			}
-			for (j = 0; j < width; j++)
-			{
-				p[i][j] = 35;
-			}
-		}
-		return (p);
-	}
-	return (NULL);
-}
-/**
- * hole_maker - makes a hole in the middle
- *
- * @size: size of the matrix
- * @p_test: pointer to test
- * @size_test: size to test
- * @p: pointer to matrix
- * Return: no return
- */
-char **hole_maker(char **p, int size, char **p_test, int size_test)
-{
-	int hole, i, j, k;
-
-	hole = size / 3;
-
-	for (i = hole; i < 2 * hole; i++)
-	{
-		for (j = hole; j < 2 * hole; j++)
-			p[j][i] = 32;
-
-	}
-	if (size > 1)
-	{
-		for (k = 0; k < 3; k++)
-		{
-			hole_maker(p + k * (size / 3), size / 3, p_test, size_test);
-			rotate(p + k * (size / 3), size / 3);
-			hole_maker(p + k * (size / 3), size / 3, p_test, size_test);
-			rotate(p + k * (size / 3), size / 3);
-			hole_maker(p + k * (size / 3), size / 3, p_test, size_test);
-			rotate(p + k * (size / 3), size / 3);
-			hole_maker(p + k * (size / 3), size / 3, p_test, size_test);
-			rotate(p + k * (size / 3), size / 3);
-		}
-
-	}
-	return (p);
-}
-/**
- * menger - prints 2d merger sponge
- *
- * @level: depth - level
- *
- * Return: no return
- */
 void menger(int level)
 {
-	int size, i, j;
-	char **p;
+	int size, row, col;
 
 	if (level < 0)
-		exit(0);
-	if (level == 0)
-	{
-		printf("#\n");
-		exit(0);
-	}
+		return;
+
 	size = pow(3, level);
-	p = alloc_grid(size, size);
-	hole_maker(p, size, p, size);
-	rotate(p, size);
-	hole_maker(p, size, p, size);
-	rotate(p, size);
-	hole_maker(p, size, p, size);
-	rotate(p, size);
-	hole_maker(p, size, p, size);
-	rotate(p, size);
-	hole_maker(p, size, p, size);
-	/*print_grid(p, size);*/
-	for (j = 0; j < size; j++)
+
+	row = 0;
+	while (row < size)
 	{
-		for (i = 0; i < size; i++)
-			printf("%c", p[j][i]);
-		printf("\n");
+		col = 0;
+		while (col < size)
+		{
+			if (hashtag(row, col))
+				printf("#");
+			else
+				printf(" ");
+			col++;
+		}
+		printf("\n"), row++;
 	}
-	finallyfree(p, size);
+}
+
+/**
+ * hashtag - function that prints "#" or " "
+ * @row: number of rows composing the Menger
+ * @col: number of columns composing the Menger
+ * Return: 1 if "#" shall be printed, 0 otherwise
+ */
+
+int hashtag(int row, int col)
+{
+	while (row && col)
+	{
+		if (row % 3 != 1 || col % 3 != 1)
+			row /= 3, col /= 3;
+		else
+			return (0);
+	}
+	return (1);
 }
