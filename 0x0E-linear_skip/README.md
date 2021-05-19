@@ -137,7 +137,3 @@ Value checked at index [14] = [76]
 Value checked at index [15] = [99]
 Found 999 at index: (nil)
 ```
-
-## Author
-
-- **Pierre Beaujuge** - [PierreBeaujuge](github.com/PierreBeaujuge)
